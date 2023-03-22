@@ -18,12 +18,23 @@ message = 'Say, hi!'
 # Initialize bot and... just the bot!
 bot = TelegramClient('bot', api_id_conf, api_hash_conf).start(bot_token=bot_token_conf)
 
-@bot.on(events.NewMessage(pattern='/start'))
-async def send_welcome(event):
-    await event.reply('Howdy, how are you doing?')
+@bot.on(events.NewMessage(pattern='/quote'))
+async def quote_text(event):
+    sequence = random.randint(402, 761)
+    conn = sqlite3.connect('data/cyberpunk_quotes.db')
+    cursor = conn.cursor()
+    sql = f"SELECT text, author, link from cyber_punk_quotes where id='{sequence}'"
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    print(rows)
+    text = rows[0][0]
+    author = rows[0][1]
+    link = rows[0][2]
+
+    await event.respond(f'<i>{text}</i>\n <b>{author}<b>\n\n {link}\n', parse_mode='html')
 
 @bot.on(events.NewMessage(pattern='/load'))
-async def quote(event):
+async def quote_image(event):
     sequence = random.randint(1, 379)
     sequence = str(sequence)
     file_name = f'data/images/{sequence}_image.webp'
