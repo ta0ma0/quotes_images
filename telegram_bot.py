@@ -26,12 +26,16 @@ async def quote_text(event):
     sql = f"SELECT text, author, link from cyber_punk_quotes where id='{sequence}'"
     cursor.execute(sql)
     rows = cursor.fetchall()
-    print(rows)
-    text = rows[0][0]
-    author = rows[0][1]
-    link = rows[0][2]
+    try:
+        text = rows[0][0]
+        author = rows[0][1]
+        link = rows[0][2]
+    except IndexError as err:
+        text = 'Void'
+        author = 'Nothing'
+        link = 'http://localhost'
 
-    await event.respond(f'<i>{text}</i>\n <b>{author}<b>\n\n {link}\n', parse_mode='html')
+    await event.respond(f'<i>{text}</i>\n <b>{author}</b>\n\n {link}\n', parse_mode='html')
 
 @bot.on(events.NewMessage(pattern='/load'))
 async def quote_image(event):
@@ -43,11 +47,14 @@ async def quote_image(event):
     sql = f"SELECT image_info, tags, source_link from images where file_name='{file_name}'"
     cursor.execute(sql)
     rows = cursor.fetchall()
-    # print(rows)
-    image_info = rows[0][0]
-    tags = rows[0][1]
-    link = rows[0][2]
-    # print(rows)
+    try:
+        image_info = rows[0][0]
+        tags = rows[0][1]
+        link = rows[0][2]
+    except IndexError as err:
+        tags = 'Void'
+        image_info = 'Nothing'
+        link = 'http://localhost'
 #   
     if re.match(r'https://www.flickr.com', link):
         await event.respond(f'{tags}\n'+'\n\n'+f'**{image_info}**'+f'{link}', parse_mode='Markdown')

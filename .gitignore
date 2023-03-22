@@ -140,3 +140,4 @@ data/
 config.py
 bot.session
 1_page.html
+bot.session-journal
