@@ -135,3 +135,7 @@ data/
 #Logs
 
 *.log
+
+# Configs
+config.py
+bot.session
